@@ -1,0 +1,36 @@
+digraph RobBank {
+	graph [ratio=auto size="100,100"]
+	node [color=blue penwidth=2.0 shape=box style=rounded]
+	fontcolor=black fontsize=22 label="Preview Attacker Behavior Refined" labeljust=c labelloc=t
+	Complete
+	Start
+	TryOpenVault
+	TryLearnCombo
+	TryFindCode
+	TryBlowUp
+	TryGetToVault
+	Start -> Complete [label="succ(RobBank), 2" color=blue penwidth=2.0]
+	Start -> Complete [label="fail(RobBank), 1" color=blue penwidth=2.0]
+	Start -> TryGetToVault [label="tryGTV, 4" color=blue penwidth=2.0]
+	TryGetToVault -> Start [label="succ(GetToVault) , 2" color=blue penwidth=2.0]
+	TryGetToVault -> Start [label="fail(GetToVault), 1" color=blue penwidth=2.0]
+	Start -> TryOpenVault [label="choose, 4" color=blue penwidth=2.0]
+	TryOpenVault -> Start [label="succ(OpenVault) , 2" color=blue penwidth=2.0]
+	TryOpenVault -> Start [label="fail(OpenVault), 1" color=blue penwidth=2.0]
+	TryOpenVault -> Start [label="tryAction , 2" color=blue penwidth=2.0]
+	TryOpenVault -> TryLearnCombo [label="tryAction, 5" color=blue penwidth=2.0]
+	TryLearnCombo -> TryOpenVault [label="succ(LearnCombo) , 5" color=blue penwidth=2.0]
+	TryLearnCombo -> TryOpenVault [label="fail(LearnCombo), 1" color=blue penwidth=2.0]
+	TryLearnCombo -> TryFindCode [label="tryAction, 5" color=blue penwidth=2.0]
+	TryFindCode -> TryLearnCombo [label="succ(FindCode1) , 1" color=blue penwidth=2.0]
+	TryFindCode -> TryLearnCombo [label="fail(FindCode1), 5" color=blue penwidth=2.0]
+	TryFindCode -> TryLearnCombo [label="succ(FindCode2) , 1" color=blue penwidth=2.0]
+	TryFindCode -> TryLearnCombo [label="fail(FindCode2), 5" color=blue penwidth=2.0]
+	TryFindCode -> TryLearnCombo [label="succ(FindCode3) , 1" color=blue penwidth=2.0]
+	TryFindCode -> TryLearnCombo [label="fail(FindCode3), 5" color=blue penwidth=2.0]
+	Start -> TryBlowUp [label="choose, 4" color=blue penwidth=2.0]
+	TryFindCode -> TryLearnCombo [label="goBack, 0.001" color=orange penwidth=2]
+	TryBlowUp -> Start [label="succ(BlowUp) , 2" color=blue penwidth=2.0]
+	TryBlowUp -> Start [label="fail(BlowUp), 1" color=blue penwidth=2.0]
+	TryBlowUp -> Start [label="goBack, 0.001" color=orange penwidth=2]
+}

@@ -1,0 +1,41 @@
+/* Open in your favourite Graphviz viewer, e.g.
+ * https://dreampuf.github.io/GraphvizOnline/
+ * https://edotor.net/
+ */
+	digraph RobBank {
+		subgraph Thief {
+			//States
+			node [shape=box style=rounded color=blue penwidth=4.0]
+			Start
+			TryOpenVault
+			TryLearnCombo
+			TryFindCode
+			TryGetToVault
+			TryBlowUp
+			Complete
+			//Transitions
+			edge [color=blue penwidth=2.0]
+			Start -> Complete [label="add(RobBank),2.0"]
+			Start -> Complete [label="fail(RobBank),1.0"]
+			Start -> TryGetToVault [label="tryGTV,4.0"]
+			TryGetToVault -> Start [label="add(GetToVault),2.0"]
+			TryGetToVault -> Start [label="fail(GetToVault),1.0"]
+			Start -> TryOpenVault [label="choose,4.0"]
+			TryOpenVault -> Start [label="add(OpenVault),2.0"]
+			TryOpenVault -> Start [label="fail(OpenVault),1.0"]
+			TryOpenVault -> Start [label="try,2.0"]
+			TryOpenVault -> TryLearnCombo [label="try,5.0"]
+			TryLearnCombo -> TryOpenVault [label="add(LearnCombo),5.0"]
+			TryLearnCombo -> TryOpenVault [label="fail(LearnCombo),1.0"]
+			TryLearnCombo -> TryFindCode [label="try,5.0"]
+			TryFindCode -> TryLearnCombo [label="add(FindCode1),1.0"]
+			TryFindCode -> TryLearnCombo [label="fail(FindCode1),5.0"]
+			TryFindCode -> TryLearnCombo [label="add(FindCode2),1.0"]
+			TryFindCode -> TryLearnCombo [label="fail(FindCode2),5.0"]
+			TryFindCode -> TryLearnCombo [label="add(FindCode3),1.0"]
+			TryFindCode -> TryLearnCombo [label="fail(FindCode3),5.0"]
+			Start -> TryBlowUp [label="choose,4.0"]
+			TryBlowUp -> Start [label="add(BlowUp),2.0"]
+			TryBlowUp -> Start [label="fail(BlowUp),1.0"]
+		}
+	}

@@ -1,0 +1,55 @@
+/* Open in your favourite Graphviz viewer, e.g.
+ * https://dreampuf.github.io/GraphvizOnline/
+ * https://edotor.net/
+ */
+	digraph RobBank {
+		
+		subgraph AttackTree {
+			//AttackNodes definitions
+			node [shape=ellipse color=red penwidth=4.0]
+			RobBank [label=<<table border="0"><tr><td><b><font point-size='20'>RobBank</font></b></td></tr></table>>]
+			OpenVault [label=<<table border="0"><tr><td><b><font point-size='20'>OpenVault</font></b></td></tr></table>>]
+			BlowUp [label=<<table border="0"><tr><td><b><font point-size='20'>BlowUp</font></b></td></tr><tr><td><b>Attributes</b></td></tr><tr><td>Cost = 90.0</td></tr><tr><td>Detection Rate = 1.0</td></tr></table>>]
+			LearnCombo [label=<<table border="0"><tr><td><b><font point-size='20'>LearnCombo</font></b></td></tr></table>>]
+			GetToVault [label=<<table border="0"><tr><td><b><font point-size='20'>GetToVault</font></b></td></tr></table>>]
+			LaserCutter [label=<<table border="0"><tr><td><b><font point-size='20'>LaserCutter</font></b></td></tr><tr><td><b>Attributes</b></td></tr><tr><td>Cost = 10.0</td></tr></table>>]
+			FindCode1 [label=<<table border="0"><tr><td><b><font point-size='20'>FindCode1</font></b></td></tr><tr><td><b>Attributes</b></td></tr><tr><td>Cost = 5.0</td></tr></table>>]
+			FindCode2 [label=<<table border="0"><tr><td><b><font point-size='20'>FindCode2</font></b></td></tr><tr><td><b>Attributes</b></td></tr><tr><td>Cost = 5.0</td></tr></table>>]
+			FindCode3 [label=<<table border="0"><tr><td><b><font point-size='20'>FindCode3</font></b></td></tr><tr><td><b>Attributes</b></td></tr><tr><td>Cost = 5.0</td></tr></table>>]
+			
+			//DefenseNodes definitions
+			node [shape=box color=green]
+			Memo [label=<<table border="0"><tr><td><b><font point-size='20'>Memo</font></b></td></tr>
+			<tr><td><b>Defense Effectiveness</b></td></tr><tr><td>ALL : FindCode2 = 0.5</td></tr></table>>]
+			//CountermeasureNodes definitions
+			node [shape=diamond color=purple]
+			LockDown [label=<<table border="0"><tr><td><b><font point-size='20'>LockDown</font></b></td></tr>
+			<tr><td><b>Defense Effectiveness</b></td></tr><tr><td>ALL : RobBank = 0.3</td></tr></table>>]
+			//Triggers
+			{BlowUp} -> LockDown [style=dashed color=blue arrowhead="vee" penwidth=4.0]
+			
+			//Edges
+			rankdir = TB
+			edge [penwidth=2.0]
+			RobBank -> OpenVault [arrowhead="none"]
+			RobBank -> BlowUp [arrowhead="none"]
+			invisibleDOTNode0 [shape=point style=invis label="" width=0.0 height=0.0]
+			OpenVault -> invisibleDOTNode0 [arrowhead="none" penwidth=2]
+			invisibleDOTNode0 -> LearnCombo [arrowhead="none" penwidth=2]
+			invisibleDOTNode1 [shape=point style=invis label="" width=0.0 height=0.0]
+			OpenVault -> invisibleDOTNode1 [arrowhead="none" penwidth=2]
+			invisibleDOTNode1 -> GetToVault [arrowhead="none" penwidth=2]
+			invisibleDOTNode0 -> invisibleDOTNode1 [arrowhead="none"]
+			BlowUp -> GetToVault [arrowhead="none"]
+			LearnCombo-> FindCode1 [arrowhead="none" penwidth=2 label="2:3"]
+			LearnCombo-> FindCode2 [arrowhead="none" penwidth=2 label="2:3"]
+			LearnCombo-> FindCode3 [arrowhead="none" penwidth=2 label="2:3"]
+			RobBank -> LockDown [style="dashed" arrowhead="none" color="gray"]
+			LockDown -> LaserCutter [style="dashed" arrowhead="none" color="gray"]
+			FindCode2 -> Memo [style="dashed" arrowhead="none" color="gray"]
+			{rank = same; invisibleDOTNode0;invisibleDOTNode1;}
+			{rank = same; LearnCombo;GetToVault;}
+		}
+		
+
+	}

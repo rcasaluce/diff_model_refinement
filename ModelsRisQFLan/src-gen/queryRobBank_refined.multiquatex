@@ -1,0 +1,46 @@
+RobBank_1(numberOfStep) = 
+ if ( s.rval("steps") >= numberOfStep )
+  then s.rval("RobBank")
+  else # RobBank_1(numberOfStep)
+ fi ;
+OpenVault_2(numberOfStep) = 
+ if ( s.rval("steps") >= numberOfStep )
+  then s.rval("OpenVault")
+  else # OpenVault_2(numberOfStep)
+ fi ;
+BlowUp_3(numberOfStep) = 
+ if ( s.rval("steps") >= numberOfStep )
+  then s.rval("BlowUp")
+  else # BlowUp_3(numberOfStep)
+ fi ;
+LearnCombo_4(numberOfStep) = 
+ if ( s.rval("steps") >= numberOfStep )
+  then s.rval("LearnCombo")
+  else # LearnCombo_4(numberOfStep)
+ fi ;
+GetToVault_5(numberOfStep) = 
+ if ( s.rval("steps") >= numberOfStep )
+  then s.rval("GetToVault")
+  else # GetToVault_5(numberOfStep)
+ fi ;
+FindCode1_6(numberOfStep) = 
+ if ( s.rval("steps") >= numberOfStep )
+  then s.rval("FindCode1")
+  else # FindCode1_6(numberOfStep)
+ fi ;
+FindCode2_7(numberOfStep) = 
+ if ( s.rval("steps") >= numberOfStep )
+  then s.rval("FindCode2")
+  else # FindCode2_7(numberOfStep)
+ fi ;
+FindCode3_8(numberOfStep) = 
+ if ( s.rval("steps") >= numberOfStep )
+  then s.rval("FindCode3")
+  else # FindCode3_8(numberOfStep)
+ fi ;
+LockDown_9(numberOfStep) = 
+ if ( s.rval("steps") >= numberOfStep )
+  then s.rval("LockDown")
+  else # LockDown_9(numberOfStep)
+ fi ;
+eval parametric(E[ RobBank_1(x) ], E[ OpenVault_2(x) ], E[ BlowUp_3(x) ], E[ LearnCombo_4(x) ], E[ GetToVault_5(x) ], E[ FindCode1_6(x) ], E[ FindCode2_7(x) ], E[ FindCode3_8(x) ], E[ LockDown_9(x) ], x,1,1,100) ;

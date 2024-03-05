@@ -1,0 +1,165 @@
+begin model RobBank_refined
+
+	begin variables
+		AttackAttempts = 0
+	end variables
+
+	begin attack nodes  
+		RobBank 
+		OpenVault BlowUp
+		LearnCombo GetToVault LaserCutter
+		FindCode1 FindCode2 FindCode3
+	end attack nodes
+	
+	begin defense nodes
+		Memo
+	end defense nodes 
+	
+	begin countermeasure nodes
+		LockDown = {BlowUp}
+	end countermeasure nodes
+	
+	begin attack diagram	
+		RobBank -> {OpenVault,BlowUp}
+		OpenVault -AND-> {LearnCombo,GetToVault}
+		BlowUp -> {GetToVault}
+		LearnCombo -K2-> {FindCode1, FindCode2, FindCode3}
+		RobBank -> {LockDown}
+		LockDown -> {LaserCutter}
+		FindCode2 -> {Memo}
+	end attack diagram
+	
+	begin attackers
+		Thief
+	end attackers
+	
+	begin defense effectiveness
+		Memo(ALL, FindCode2) = 0.5
+		LockDown(ALL,RobBank) = 0.3
+	end defense effectiveness
+	
+	begin attack detection rates
+		BlowUp = 1.0
+	end attack detection rates
+	
+	begin attributes
+		Cost = {LaserCutter = 10, BlowUp = 90, 
+				FindCode1 = 5, FindCode2 = 5, FindCode3 = 5}
+	end attributes
+	
+	begin quantitative constraints
+		{ value(Cost) <= 100 }
+	end quantitative constraints
+	
+	begin actions
+		tryAction tryGTV choose goBack
+	end actions
+	
+	begin action constraints
+		do(choose) -> !(has(OpenVault) or has(BlowUp))
+	end action constraints
+	
+	begin attacker behaviour
+		begin attack
+			attacker = Thief
+			states = Start, TryOpenVault, TryLearnCombo, TryFindCode, TryGetToVault, TryBlowUp, Complete 
+			
+			transitions= // automatic one
+			Start -(succ(RobBank), 2, allowed(RobBank))-> Complete,
+			 Start -(fail(RobBank), 1, allowed(RobBank))-> Complete,
+			 Start -(tryGTV, 4, !has(GetToVault))-> TryGetToVault,
+			 TryGetToVault -(succ(GetToVault) , 2, {AttackAttempts = AttackAttempts + 1})-> Start,
+			 TryGetToVault -(fail(GetToVault), 1, {AttackAttempts = AttackAttempts + 1})-> Start,
+			 Start -(choose, 4)-> TryOpenVault,
+			 TryOpenVault -(succ(OpenVault) , 2, {AttackAttempts = AttackAttempts + 1},has(LearnCombo) and has(GetToVault))-> Start,
+			 TryOpenVault -(fail(OpenVault), 1, {AttackAttempts = AttackAttempts + 1},has(LearnCombo) and has(GetToVault))-> Start,
+			 TryOpenVault -(tryAction , 2, has(LearnCombo) and !has(GetToVault))-> Start,
+			 TryOpenVault -(tryAction, 5, !has(LearnCombo))-> TryLearnCombo,
+			 TryLearnCombo -(succ(LearnCombo) , 5, {AttackAttempts = AttackAttempts + 1})-> TryOpenVault,
+			 TryLearnCombo -(fail(LearnCombo), 1, {AttackAttempts = AttackAttempts + 1})-> TryOpenVault,
+			 TryLearnCombo -(tryAction, 5, !has(FindCode1) or !has(FindCode2) or !has(FindCode3))-> TryFindCode,
+			 TryFindCode -(succ(FindCode1) , 1, {AttackAttempts = AttackAttempts + 1},!has(FindCode1))-> TryLearnCombo,
+			 TryFindCode -(fail(FindCode1), 5, {AttackAttempts = AttackAttempts + 1},!has(FindCode1))-> TryLearnCombo,
+			 TryFindCode -(succ(FindCode2) , 1, {AttackAttempts = AttackAttempts + 1},!has(FindCode2))-> TryLearnCombo,
+			 TryFindCode -(fail(FindCode2), 5, {AttackAttempts = AttackAttempts + 1},!has(FindCode2))-> TryLearnCombo,
+			 TryFindCode -(succ(FindCode3) , 1, {AttackAttempts = AttackAttempts + 1},!has(FindCode3))-> TryLearnCombo,
+			 TryFindCode -(fail(FindCode3), 5, {AttackAttempts = AttackAttempts + 1},!has(FindCode3))-> TryLearnCombo,
+			 Start -(choose, 4)-> TryBlowUp,
+			 TryFindCode -(goBack, 0.001)-> TryLearnCombo,
+			 TryBlowUp -(succ(BlowUp) , 2, {AttackAttempts = AttackAttempts + 1})-> Start,
+			 TryBlowUp -(fail(BlowUp), 1, {AttackAttempts = AttackAttempts + 1})-> Start,
+			 TryBlowUp -(goBack, 0.001)-> Start
+		
+			
+			
+		end attack
+	end attacker behaviour
+	
+	begin init 
+		//Thief = {FindCode1}
+		//LockDown cannot be activated if we have LaserCutter (which is its role-changing son)
+		Thief = {FindCode1,LaserCutter}
+	end init
+	
+//A model can be debugged by performing a probabilistic simulation 
+/*
+begin simulate
+seed = 1
+steps = 50
+file = "out_50_steps_senza_maxcost.txt"
+end simulate 
+ */
+
+ 	begin analysis
+		query = eval from 1 to 100 by 1 :
+		{RobBank, OpenVault, BlowUp,LearnCombo,
+		GetToVault,FindCode1,  FindCode2, FindCode3,LockDown}
+		default delta = 0.1
+		alpha = 0.1
+		parallelism = 1
+		logs = 'log_RobBank_refined.csv'
+	end analysis
+
+/*
+begin analysis
+		query = eval when { AttackAttempts == 1 } :
+		{
+			RobBank,
+			OpenVault,
+			BlowUp,
+			LearnCombo,
+			GetToVault,
+			FindCode2, FindCode3,
+			LockDown,
+			steps[delta=0.5] 
+			//,value(Cost) [delta = 10]
+			//,AttackAttempts [delta=5]
+			
+			//Due to the quantitative constraint on 'cost', we will never have both these two together. Otherwise the attack would become too expensive.
+			//FindCode2 +  FindCode3
+		}
+		default delta = 0.1
+		alpha = 0.1
+		parallelism = 1
+	end analysis
+*/
+
+//Average cost of successful attacks
+/* 
+	begin analysis 
+		query = eval when has(RobBank) :
+		{
+			value(Cost), AttackAttempts [delta = 1]
+		}
+		default delta = 20
+		alpha = 0.1
+		parallelism = 1
+	end analysis
+*/	
+
+/*begin exportDTMC
+file ="RobBank.pm"
+//format = PRISM
+end exportDTMC*/
+
+end model

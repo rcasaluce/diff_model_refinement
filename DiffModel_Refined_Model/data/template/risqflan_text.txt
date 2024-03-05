@@ -1,0 +1,141 @@
+begin model {{name}}
+
+	begin variables
+		AttackAttempts = 0
+	end variables
+
+	begin attack nodes  
+		{% for attack_node in attacks_nodes -%}
+   		{{attack_node}}
+    	{% endfor %}	
+	end attack nodes
+	
+	begin defense nodes
+		{% for defense in defense_nodes -%}
+   		{{defense}}
+	{% endfor %}
+	end defense nodes 
+	
+	begin countermeasure nodes
+		{% for counterm in countermeasure_nodes -%}
+   		{{counterm}}
+	{% endfor %}
+	end countermeasure nodes
+	
+	begin attack diagram
+		{% for attack_diagram in attacks_diagram -%}
+   		{{attack_diagram}}
+    	{% endfor %}			
+	end attack diagram
+	
+	begin attackers
+		Attacker
+	end attackers
+	
+	begin defense effectiveness
+	end defense effectiveness
+	
+	begin attack detection rates
+	end attack detection rates
+	
+	begin attributes
+		{{attributes}}
+	//ADD single Cost for each attack attempts on a nodes
+	end attributes
+	
+	begin quantitative constraints
+		{{quantitative_constraints}}
+		//ADD max Cost 
+	end quantitative constraints
+	
+	begin actions
+		{% for action in actions -%}
+		{{ action }}{% if not loop.last %} {% endif %}
+		{%- endfor %}
+
+	end actions
+	
+	begin action constraints
+		{{action_contraints}}
+	end action constraints
+	
+	begin attacker behaviour
+		begin attack
+			attacker =
+				Attacker
+			states = 
+			{% for state in states -%}
+			{{ state }}{% if not loop.last %},{% endif %}
+			{% endfor %}
+		
+		transitions = 	
+		{% for transition in transitions -%}
+		{{ transition }}{% if not loop.last %},{% endif %}
+		{% endfor %}
+			
+		end attack
+	end attacker behaviour
+	begin init 
+		Attacker	
+	end init
+
+
+
+//A model can be debugged by performing a probabilistic simulation 
+/*
+begin simulate
+seed = 1
+steps = 1
+file = "out.txt"
+end simulate 
+*/
+
+	begin analysis
+		query = eval from 1 to 100 by 1 :
+		{
+		 {{ name_properties|join(', ') }}
+			
+			//,value(Cost) [delta = 10]
+			//,AttackAttempts [delta=5]
+			
+			//Due to the quantitative constraint on 'cost', we will never have both these two together. Otherwise the attack would become too expensive.
+			
+		}
+		default delta = 0.1
+		alpha = 0.1
+		parallelism = 1 //the number of local processes
+	logs = 'log_{{name}}.csv'
+	end analysis
+
+/*
+begin analysis
+		query = eval when { AttackAttempts == 1 } :
+		{
+			
+		}
+		default delta = 0.1
+		alpha = 0.1
+		parallelism = 1
+	end analysis
+*/
+
+//Average cost of successful attacks
+/* 
+	begin analysis 
+		query = eval when has({{name}}) :
+		{
+			value(Cost), AttackAttempts [delta = 1]
+		}
+		default delta = 20
+		alpha = 0.1
+		parallelism = 1
+	end analysis
+*/	
+/*
+begin exportDTMC
+file ="{{name}}.txt"
+//format = PRISM
+end exportDTMC
+*/
+//provare su pm di trovare quando da false lockdown pass a true sul fail blowup and add blowup
+end model
