@@ -33,10 +33,10 @@ Project Organization
     └── requirements.txt
    
 --------
-To run the experiment use diff_model.py script.
 
+## Options diff_model.py script. 
 
-**Options diff_model.py script:**
+Returns the Diff model:
 
 
 	-h, --help: Show the help message and exit.
@@ -52,11 +52,16 @@ To run the experiment use diff_model.py script.
   	of the procedural part of the RisQFLan model and the mined PM model.
 
     
-## To run experiments 
+### To run experiments diff_model.py
+
+Make sure to be in `DiffModel_Refined_Model` folder and run: 
 
 `python diff_model.py -i log_RobBank_original.csv - idot RobBankAttacker.dot -o diff_model_w_diff_script.pdf`
 
-**Options diff_model_auto_refinement.py script:**
+
+## Options diff_model_auto_refinement.py script. 
+
+Returns the Diff model and the RiSQFLan file with the refined model:
 
 
 	-h, --help: Show the help message and exit.`
@@ -75,9 +80,11 @@ To run the experiment use diff_model.py script.
 	and the mined PM model.
 
     
-## To run experiments 
+### To run experiments diff_model_auto_refinement.py
 
-`python diff_model.py -i  log_RobBank_original.csv -idot RobBankAttacker.dot -ibbt RobBank.bbt  o- diff_model_w_ref_script.pdf`
+Make sure to be in `DiffModel_Refined_Model` folder and run: 
+
+`python diff_model_auto_refinement.py -i  log_RobBank_original.csv -idot RobBankAttacker.dot -ibbt RobBank.bbt  o- diff_model_w_ref_script.pdf`
 
 
 ## Check the [Documentation_DAMOCLES](https://github.com/rcasaluce/diff_model_refinement/blob/main/Documentation_DAMOCLES.pdf) for further instructions on how to use the artifact.
