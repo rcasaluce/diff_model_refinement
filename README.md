@@ -1,4 +1,4 @@
-# Artifact -  Enhancing Threat Model Validation: A White-Box Approach with Statistical Model Checking and Process Mining
+# Artifact -  Enhancing Threat Model Validation: A White-Box Approach based on Statistical Model Checking and Process Mining
 
 Some packages require Python version >= 3.9. Tested with Python version 3.10.6 on Ubuntu 22.04.2 LTS
 
@@ -8,7 +8,7 @@ Some packages require Python version >= 3.9. Tested with Python version 3.10.6 o
 > To install pygraphviz on Windows - See https://pygraphviz.github.io/documentation/stable/install.html#advanced for additional information.
 > For Macs ARM see https://github.com/pygraphviz/pygraphviz/issues/398 
 
-Project Organization
+Project Organization - DiffModel_Refined_Model Folder
 
 ------------
 
