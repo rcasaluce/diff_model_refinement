@@ -40,6 +40,11 @@ Project Organization - DiffModel_Refined_Model Folder
    
 --------
 
+
+## Example of DIff Model tailored to threat models
+
+  ![New Diff Model](./images/diff_model.png)  
+
 ## Options diff_model.py script. 
 
 Returns the Diff model:
